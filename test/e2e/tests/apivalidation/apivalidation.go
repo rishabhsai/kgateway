@@ -314,6 +314,31 @@ spec:
 			wantErrors: []string{"spec.dns.refreshRate: Invalid value: .*: refreshRate must be at least 1ms"},
 		},
 		{
+			name: "BackendConfigPolicy: healthCheck timeout and interval must be at least 1ms",
+			input: `---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: BackendConfigPolicy
+metadata:
+  name: backend-config-health-check-zero-durations
+spec:
+  targetRefs:
+  - group: ""
+    kind: Service
+    name: test-service
+  healthCheck:
+    timeout: 0s
+    interval: 0s
+    unhealthyThreshold: 3
+    healthyThreshold: 2
+    http:
+      path: /healthz
+`,
+			wantErrors: []string{
+				"spec.healthCheck.interval: Invalid value: .*: interval must be at least 1ms",
+				"spec.healthCheck.timeout: Invalid value: .*: timeout must be at least 1ms",
+			},
+		},
+		{
 			name: "BackendConfigPolicy: jitter must not exceed refreshRate",
 			input: `---
 apiVersion: gateway.kgateway.dev/v1alpha1

@@ -270,6 +270,8 @@ spec:
                     x-kubernetes-validations:
                     - message: invalid duration value
                       rule: matches(self, '^([0-9]{1,5}(h|m|s|ms)){1,4}$')
+                    - message: interval must be at least 1ms
+                      rule: duration(self) >= duration('1ms')
                   timeout:
                     description: |-
                       Timeout is time to wait for a health check response. If the timeout is reached the
@@ -279,6 +281,8 @@ spec:
                     x-kubernetes-validations:
                     - message: invalid duration value
                       rule: matches(self, '^([0-9]{1,5}(h|m|s|ms)){1,4}$')
+                    - message: timeout must be at least 1ms
+                      rule: duration(self) >= duration('1ms')
                   unhealthyThreshold:
                     description: |-
                       UnhealthyThreshold is the number of consecutive failed health checks that will be considered
